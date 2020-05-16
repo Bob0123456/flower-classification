@@ -7,6 +7,7 @@ from sklearn.metrics import accuracy_score
 from sklearn.metrics import confusion_matrix
 from sklearn.metrics import plot_confusion_matrix
 from keras.optimizers import Adam, SGD, Adagrad, Adadelta
+from sklearn.model_selection import train_test_split
 
 
 def print_confusion_matrix(probs, labels, classes):
@@ -18,6 +19,7 @@ def print_confusion_matrix(probs, labels, classes):
 
 
 x_train, x_test, y_train, y_test = open.preprocess()
+x_test, x_val, y_test, y_val = train_test_split(x_test, y_test, test_size=0.25, random_state=100)
 
 datagen = ImageDataGenerator(
         featurewise_center=False,  # set input mean to 0 over the dataset
@@ -51,7 +53,7 @@ model.compile(optimizer=Adam(lr=0.001),
 
 model.fit_generator(datagen.flow(x_train,y_train, batch_size=256),
           epochs=15,
-          validation_data = (x_test, y_test))
+          validation_data = (x_val, y_val))
 
 
 pred = model.predict(x_test)
